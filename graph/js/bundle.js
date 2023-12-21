@@ -1,4 +1,4 @@
-define('Bundle', ['exports', 'PublicState', 'EmojiMini'], (function (exports, PublicState, EmojiMini) { 'use strict';
+fdefine('Bundle', ['exports', 'PublicState', 'EmojiMini'], (function (exports, PublicState, EmojiMini) { 'use strict';
 
     // TODO: this whole file is mosly here to not break compatibility with pre-Stem code, need refactoring
     var EPS = 1e-6; // Check if a value is equal to zero. Use epsilon check.
@@ -83879,7 +83879,7 @@ define('Bundle', ['exports', 'PublicState', 'EmojiMini'], (function (exports, Pu
           return UI.createElement(Cls, null);
         }
 
-        ensure("/static/js/RichEditorWrapper.js", modules => {
+        ensure("./js/RichEditorWrapper.js", modules => {
           console.log("Modules", modules);
           window["require"](["RichEditorWrapper"], exports => {
             this.Cls = exports.RichEditorWrapper;
@@ -84887,7 +84887,7 @@ define('Bundle', ['exports', 'PublicState', 'EmojiMini'], (function (exports, Pu
     Link.prototype.onMount = singlePageLinkOnMount;
 
     CodeEditor.requireAce = function (callback) {
-      ensure("/static/js/ext/ace/ace.js", () => {
+      ensure("./js/ext/ace/ace.js", () => {
         CodeEditor.AceRange = window.ace.require("ace/range").Range;
         callback && callback();
       });
