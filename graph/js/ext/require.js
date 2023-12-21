@@ -204,10 +204,8 @@ var requirejs, require, define;
                 //config to speed up normalize(), which
                 //will run faster if there is no default.
                 waitSeconds: 7,
-                baseUrl: 'graph/js',
-                paths: {
-                    graph: './graph'
-                },
+                baseUrl: './',
+                paths: {},
                 bundles: {},
                 pkgs: {},
                 shim: {},
