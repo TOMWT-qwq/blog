@@ -205,7 +205,9 @@ var requirejs, require, define;
                 //will run faster if there is no default.
                 waitSeconds: 7,
                 baseUrl: 'graph/js',
-                paths: {},
+                paths: {
+                    graph: './graph'
+                },
                 bundles: {},
                 pkgs: {},
                 shim: {},
