@@ -83879,7 +83879,7 @@ fdefine('Bundle', ['exports', 'PublicState', 'EmojiMini'], (function (exports, P
           return UI.createElement(Cls, null);
         }
 
-        ensure("./js/RichEditorWrapper.js", modules => {
+        ensure("/graph/js/RichEditorWrapper.js", modules => {
           console.log("Modules", modules);
           window["require"](["RichEditorWrapper"], exports => {
             this.Cls = exports.RichEditorWrapper;
@@ -84887,7 +84887,7 @@ fdefine('Bundle', ['exports', 'PublicState', 'EmojiMini'], (function (exports, P
     Link.prototype.onMount = singlePageLinkOnMount;
 
     CodeEditor.requireAce = function (callback) {
-      ensure("./js/ext/ace/ace.js", () => {
+      ensure("/graph/js/ext/ace/ace.js", () => {
         CodeEditor.AceRange = window.ace.require("ace/range").Range;
         callback && callback();
       });
