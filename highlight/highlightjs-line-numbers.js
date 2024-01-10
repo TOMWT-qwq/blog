@@ -209,14 +209,16 @@
 
         if (lines.length > 1 || options.singleLine) {
             var html = '';
-
+            var longest=""+(lines.length-1+options.startFrom);
             for (var i = 0, l = lines.length; i < l; i++) {
+                var str=""+(i+options.startFrom);
+                for(;str.length<longest.length;str=' '+str);
                 html += format(
                     '<tr>' +
-                        '<td class="{0} {1}" {3}="{5}">' +
-                            '<div class="{2}" {3}="{5}"></div>' +
+                        '<td class="{0} {1}" {3}="{5}. ">' +
+                            '<div class="{2}" {3}="{5}. "></div>' +
                         '</td>' +
-                        '<td class="{0} {4}" {3}="{5}">' +
+                        '<td class="{0} {4}" {3}="{5}. ">' +
                             '{6}' +
                         '</td>' +
                     '</tr>',
@@ -226,7 +228,7 @@
                     NUMBER_LINE_NAME,
                     DATA_ATTR_NAME,
                     CODE_BLOCK_NAME,
-                    i + options.startFrom,
+                    str,
                     lines[i].length > 0 ? lines[i] : ' '
                 ]);
             }
