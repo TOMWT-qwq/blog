@@ -3382,15 +3382,39 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       className: 'string',
       variants: [
         {
+          className: 'string-quote',
           begin: '(u8?|U|L)?"',
           end: '"',
           illegal: '\\n',
-          contains: [ hljs.BACKSLASH_ESCAPE ]
+          contains: [
+            {
+              className: 'backslash',
+              variants: [hljs.BACKSLASH_ESCAPE],
+            },
+            {
+              className: 'backslash',
+              begin: '%(d|lld|I64d|f|lf|Lf|s|c)'
+            },
+            {
+              className: 'string',
+              begin: '[^"]'
+            }
+          ]
         },
         {
-          begin: '(u8?|U|L)?\'(' + CHARACTER_ESCAPES + '|.)',
+          className: 'string-quote',
+          begin: '(u8?|U|L)?\'',
           end: '\'',
-          illegal: '.'
+          contains: [
+            {
+              className: 'backslash',
+              variants: [hljs.BACKSLASH_ESCAPE],
+            },
+            {
+              className: 'string',
+              begin: '[^\']'
+            }
+          ]
         },
         hljs.END_SAME_AS_BEGIN({
           begin: /(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,
@@ -3444,30 +3468,8 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       relevance: 0
     };
 
-    const PREPROCESSOR = {
-      className: 'meta',
-      begin: /#\s*[a-z]+\b/,
-      end: /$/,
-      keywords: { keyword:
-          'if else elif endif define undef warning error line '
-          + 'pragma _Pragma ifdef ifndef include' },
-      contains: [
-        {
-          begin: /\\\n/,
-          relevance: 0
-        },
-        hljs.inherit(STRINGS, { className: 'string' }),
-        {
-          className: 'string',
-          begin: /<.*?>/
-        },
-        C_LINE_COMMENT_MODE,
-        hljs.C_BLOCK_COMMENT_MODE
-      ]
-    };
-
     const TITLE_MODE = {
-      className: 'title',
+      className: 'declare',
       begin: regex.optional(NAMESPACE_RE) + hljs.IDENT_RE,
       relevance: 0
     };
@@ -3782,6 +3784,36 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         regex.lookahead(/(<[^<>]+>|)\s*\(/))
     };
 
+    const PREPROCESSOR = {
+      className: 'meta',
+      begin: /#\s*[a-z]+\b/,
+      end: /$/,
+      keywords: { keyword:
+          'if else elif endif define undef warning error line '
+          + 'pragma _Pragma ifdef ifndef include' },
+      contains: [
+        {
+          begin: /\\\n/,
+          relevance: 0
+        },
+        {
+          className: 'string-quote',
+          begin: /<|>/
+        },
+        {
+          className: 'number',
+          begin: /[A-Z]|[0-9]/
+        },
+        hljs.inherit(STRINGS, { className: 'string' }),
+        {
+          className: 'string',
+          begin: /./
+        },
+        C_LINE_COMMENT_MODE,
+        hljs.C_BLOCK_COMMENT_MODE
+      ]
+    };
+
     const EXPRESSION_CONTAINS = [
       FUNCTION_DISPATCH,
       PREPROCESSOR,
@@ -3919,6 +3951,10 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         FUNCTION_DECLARATION,
         FUNCTION_DISPATCH,
         EXPRESSION_CONTAINS,
+        {
+          className: 'symbols',
+          begin: /=/
+        },
         [
           PREPROCESSOR,
           { // containers: ie, `vector <int> rooms (9);`

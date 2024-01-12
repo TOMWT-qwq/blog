@@ -23,9 +23,9 @@
 					});
 			});
 		</script>
-		<link rel="stylesheet" href="/highlight/mariana.css">
-		<script src="/highlight/highlight.min.js"></script>
-		<script src="/highlight/highlightjs-line-numbers.js"></script>
+		<link rel="stylesheet" href="./highlight/mariana.css">
+		<script src="./highlight/highlight.js"></script>
+		<script src="./highlight/highlightjs-line-numbers.js"></script>
 		<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
 		<style>code{font-family:Consolas;}</style>
 	</head>
@@ -33,10 +33,19 @@
 		$test$
 		$$test$$
 		<pre><code class="language-cpp">#include&lt;stdio.h>
+#define N 100009
+#error qwq
+inline void read(int&x)
+{
+	char c=nc();for(;c&lt;'0'||'9'&lt;c;c=nc());
+	for(x=0;'0'&lt;=c&&c&lt;='9';x=(x&lt;&lt;3)+(x&lt;&lt;1)+(c^48),c=nc());
+}
+vector&lt;int>x;
 main()
 {
-	printf("%d",1&2);
-
+	read(x);
+	printf("%d\"\'%lld%I64dasdf",1&2ll);
+	bool b=true;
 
 
 
