@@ -3756,6 +3756,11 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       'true'
     ];
 
+    const SYMBOLS = {
+      className: 'symbols',
+      begin: /\!|\@|\#|\$|\%|\^|\&|\*|<|>|\/|\?|=|\|/
+    };
+
     // https://en.cppreference.com/w/cpp/keyword
     const BUILT_IN = [ '_Pragma' ];
 
@@ -3821,7 +3826,8 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       NUMBERS,
-      STRINGS
+      STRINGS,
+      SYMBOLS
     ];
 
     const EXPRESSION_CONTEXT = {
@@ -3850,7 +3856,8 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
           keywords: CPP_KEYWORDS,
           contains: EXPRESSION_CONTAINS.concat([ 'self' ]),
           relevance: 0
-        }
+        },
+        SYMBOLS,
       ]),
       relevance: 0
     };
@@ -3903,6 +3910,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
           keywords: CPP_KEYWORDS,
           relevance: 0,
           contains: [
+            SYMBOLS,
             C_LINE_COMMENT_MODE,
             hljs.C_BLOCK_COMMENT_MODE,
             STRINGS,
@@ -3951,10 +3959,6 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         FUNCTION_DECLARATION,
         FUNCTION_DISPATCH,
         EXPRESSION_CONTAINS,
-        {
-          className: 'symbols',
-          begin: /=/
-        },
         [
           PREPROCESSOR,
           { // containers: ie, `vector <int> rooms (9);`
