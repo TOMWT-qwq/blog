@@ -31,13 +31,12 @@ hue-6-2: #e6c07b
 }
 .hljs-comment,
 .hljs-quote {
-  color: #5c6370;
-  font-style: italic
+  color: #A6ACB9;
 }
 .hljs-doctag,
 .hljs-keyword,
 .hljs-formula {
-  color: #EC6066
+  color: #C695C6
 }
 .hljs-section,
 .hljs-name,
@@ -70,7 +69,9 @@ hue-6-2: #e6c07b
 .hljs-selector-class,
 .hljs-selector-attr,
 .hljs-selector-pseudo,
-.hljs-number {
+.hljs-number,
+.hljs-title.class_,
+.hljs-class .hljs-title {
   color: #F9AE57
 }
 .hljs-backslash,
@@ -80,7 +81,7 @@ hue-6-2: #e6c07b
 .hljs-declare {
   color: #59B4B4
 }
-.hljs-symbols{
+.hljs-symbol{
   color: #F97B57
 }
 .hljs-built_in,
@@ -89,10 +90,6 @@ hue-6-2: #e6c07b
 .hljs-selector-id,
 .hljs-title {
   color: #6099CC
-}
-.hljs-title.class_,
-.hljs-class .hljs-title {
-  color: #e6c07b
 }
 .hljs-emphasis {
   font-style: italic

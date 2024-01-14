@@ -3756,9 +3756,17 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       'true'
     ];
 
-    const SYMBOLS = {
-      className: 'symbols',
-      begin: /\!|\@|\#|\$|\%|\^|\&|\*|<|>|\/|\?|=|\|/
+    const SYMBOL = {
+      className: 'symbol',
+      match: regex.either(
+        '\\+=','\\-=','\\*=','\\/=','\\%=','\\&=','\\|=','\\^=','\\<\\<=','\\>\\>=',
+        '\\+\\+','\\-\\-',
+        '\\<\\<','\\>\\>',
+        '\\&\\&','\\|\\|',
+        '\\<=\\>','==','\\!=','\\<=','\\>=',
+        '\\~','\\!','\\$','\\^','\\&','\\*','\\<','\\>','\\/','\\-','\\+',
+        '\\?','\\:','=','\\|',
+      )
     };
 
     // https://en.cppreference.com/w/cpp/keyword
@@ -3803,17 +3811,20 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         },
         {
           className: 'string-quote',
-          begin: /<|>/
+          begin: /</,
+          end: />/,
+          contains: [
+            {
+              className: 'string',
+              begin: /[^>]+/
+            },
+          ]
         },
         {
           className: 'number',
           begin: /[A-Z]|[0-9]/
         },
         hljs.inherit(STRINGS, { className: 'string' }),
-        {
-          className: 'string',
-          begin: /./
-        },
         C_LINE_COMMENT_MODE,
         hljs.C_BLOCK_COMMENT_MODE
       ]
@@ -3825,9 +3836,9 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       CPP_PRIMITIVE_TYPES,
       C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
+      SYMBOL,
       NUMBERS,
-      STRINGS,
-      SYMBOLS
+      STRINGS
     ];
 
     const EXPRESSION_CONTEXT = {
@@ -3850,6 +3861,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       ],
       keywords: CPP_KEYWORDS,
       contains: EXPRESSION_CONTAINS.concat([
+        SYMBOL,
         {
           begin: /\(/,
           end: /\)/,
@@ -3857,7 +3869,6 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
           contains: EXPRESSION_CONTAINS.concat([ 'self' ]),
           relevance: 0
         },
-        SYMBOLS,
       ]),
       relevance: 0
     };
@@ -3910,7 +3921,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
           keywords: CPP_KEYWORDS,
           relevance: 0,
           contains: [
-            SYMBOLS,
+            SYMBOL,
             C_LINE_COMMENT_MODE,
             hljs.C_BLOCK_COMMENT_MODE,
             STRINGS,

@@ -33,38 +33,61 @@
 		$test$
 		$$test$$
 		<pre><code class="language-cpp">#include&lt;stdio.h>
+#include&lt;map>
 #define N 100009
-#error qwq
+#define int __int128
+using namespace std;
+// inline char nc()
+// {
+// 	static char buf[99999],*l,*r;
+// 	return l==r&&(r=(l=buf)+fread(buf,1,99999,stdin),l==r)?EOF:*l++;
+// }
+#define nc getchar
 inline void read(int&x)
 {
 	char c=nc();for(;c&lt;'0'||'9'&lt;c;c=nc());
 	for(x=0;'0'&lt;=c&&c&lt;='9';x=(x&lt;&lt;3)+(x&lt;&lt;1)+(c^48),c=nc());
 }
-vector&lt;int>x;
+int t,n,q,m,lst,o[N],x[N],f[N],ans[N];map&lt;int,int>mmp;
+struct __readt__{inline __readt__(){read(t);}}_readt___;
+inline int find(int x){if(x^f[x])return f[x]=find(f[x]);return x;}
 main()
 {
-	read(x);
-	printf("%d\"\'%lld%I64dasdf",1&2ll);
-	bool b=true;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	read(n);read(q);m=0;lst=0;
+	for(int i=0;i&lt;n;++i)
+	{
+		read(o[i]);read(x[i]);
+		if(m>=1000000000000000000ll)continue;
+		if(o[i]==1)++m;
+		else m*=x[i]+1;
+		lst=i;
+	}
+	mmp.clear();for(int i=0;i&lt;q;f[i]=i,++i);
+	for(int i=0,a;i&lt;q;++i)
+	{
+		read(a);
+		if(mmp.count(a))f[i]=mmp[a];
+		else mmp[a]=i;
+	}
+	for(int i=lst;i>=0;--i)if(o[i]==1)
+	{
+		for(;mmp.size()&&(--mmp.end())->first==m;mmp.erase(--mmp.end()))
+			ans[(--mmp.end())->second]=x[i];
+		--m;
+	}
+	else
+	{
+		m/=x[i]+1;
+		for(;mmp.size()&&(--mmp.end())->first>m;mmp.erase(--mmp.end()))
+		{
+			int p=(--mmp.end())->first%m;!p&&(p=m);
+			if(mmp.count(p))f[find((--mmp.end())->second)]=find(mmp[p]);
+			else mmp[p]=(--mmp.end())->second;
+		}
+	}
+	for(int i=0;i&lt;q;++i)printf("%d ",(signed)(ans[find(i)]));
+	if(--t)main();
+	1+1;1-1;+1;-1;a[1]+1;a[1]-1;
 }</code></pre>
 
 
