@@ -25,6 +25,7 @@ hue-6:   #d19a66
 hue-6-2: #e6c07b
 
 */
+.hljs-meta,
 .hljs {
   color: #D8DEE9;
   background: #303841
@@ -75,12 +76,13 @@ hue-6-2: #e6c07b
   color: #F9AE57
 }
 .hljs-backslash,
-.hljs-meta,.hljs-meta>.hljs-keyword{
+.hljs-meta>.hljs-keyword{
   color: #C695C6
 }
 .hljs-declare {
   color: #59B4B4
 }
+.hljs-operator,
 .hljs-symbol{
   color: #F97B57
 }

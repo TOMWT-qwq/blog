@@ -3468,13 +3468,31 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       relevance: 0
     };
 
+    const OPERATOR_RE = regex.either(
+      '\\+=','\\-=','\\*=','\\/=','\\%=','\\&=','\\|=','\\^=','\\<\\<=','\\>\\>=',
+      '\\+\\+','\\-\\-',
+      '\\<\\<','\\>\\>',
+      '\\&\\&','\\|\\|',
+      '\\<=\\>','==','\\!=','\\<=','\\>=',
+      '\\~','\\!','\\%','\\^','\\&','\\*','\\<','\\>','\\/','\\-','\\+',
+      '\\?','\\:','=','\\|',
+    );
+
+    const OPERATOR = {
+      scope: 'operator',
+      match: OPERATOR_RE
+    };
+
     const TITLE_MODE = {
       className: 'declare',
       begin: regex.optional(NAMESPACE_RE) + hljs.IDENT_RE,
       relevance: 0
     };
 
-    const FUNCTION_TITLE = regex.optional(NAMESPACE_RE) + hljs.IDENT_RE + '\\s*\\(';
+    const FUNCTION_TITLE = regex.either(
+      regex.optional(NAMESPACE_RE) + hljs.IDENT_RE + '\\s*\\(',
+      'operator\\s*'+ OPERATOR_RE
+    );
 
     // https://en.cppreference.com/w/cpp/keyword
     const RESERVED_KEYWORDS = [
@@ -3756,19 +3774,6 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       'true'
     ];
 
-    const SYMBOL = {
-      className: 'symbol',
-      match: regex.either(
-        '\\+=','\\-=','\\*=','\\/=','\\%=','\\&=','\\|=','\\^=','\\<\\<=','\\>\\>=',
-        '\\+\\+','\\-\\-',
-        '\\<\\<','\\>\\>',
-        '\\&\\&','\\|\\|',
-        '\\<=\\>','==','\\!=','\\<=','\\>=',
-        '\\~','\\!','\\$','\\^','\\&','\\*','\\<','\\>','\\/','\\-','\\+',
-        '\\?','\\:','=','\\|',
-      )
-    };
-
     // https://en.cppreference.com/w/cpp/keyword
     const BUILT_IN = [ '_Pragma' ];
 
@@ -3778,6 +3783,41 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       literal: LITERALS,
       built_in: BUILT_IN,
       _type_hints: TYPE_HINTS
+    };
+
+    const PREPROCESSOR = {
+      className: 'meta',
+      begin: /(?=#\s*[a-z]+\b)/,
+      end: /$/,
+      keywords: { keyword:
+          'if else elif endif define undef warning error line '
+          + 'pragma _Pragma ifdef ifndef include' },
+      contains: [
+        {
+          begin: /\\\n/,
+          relevance: 0
+        },
+        {
+          className: 'keyword',
+          begin: /#/
+        },
+        {
+          className: 'string-quote',
+          begin: /<(?=[a-zA-Z.]*>)/,
+          end: />/,
+          contains: [
+            {
+              className: 'string',
+              begin: /[^>]+/
+            },
+          ]
+        },
+        OPERATOR,
+        NUMBERS,
+        hljs.inherit(STRINGS, { className: 'string' }),
+        C_LINE_COMMENT_MODE,
+        hljs.C_BLOCK_COMMENT_MODE
+      ]
     };
 
     const FUNCTION_DISPATCH = {
@@ -3797,46 +3837,13 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         regex.lookahead(/(<[^<>]+>|)\s*\(/))
     };
 
-    const PREPROCESSOR = {
-      className: 'meta',
-      begin: /#\s*[a-z]+\b/,
-      end: /$/,
-      keywords: { keyword:
-          'if else elif endif define undef warning error line '
-          + 'pragma _Pragma ifdef ifndef include' },
-      contains: [
-        {
-          begin: /\\\n/,
-          relevance: 0
-        },
-        {
-          className: 'string-quote',
-          begin: /</,
-          end: />/,
-          contains: [
-            {
-              className: 'string',
-              begin: /[^>]+/
-            },
-          ]
-        },
-        {
-          className: 'number',
-          begin: /[A-Z]|[0-9]/
-        },
-        hljs.inherit(STRINGS, { className: 'string' }),
-        C_LINE_COMMENT_MODE,
-        hljs.C_BLOCK_COMMENT_MODE
-      ]
-    };
-
     const EXPRESSION_CONTAINS = [
       FUNCTION_DISPATCH,
       PREPROCESSOR,
       CPP_PRIMITIVE_TYPES,
       C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
-      SYMBOL,
+      OPERATOR,
       NUMBERS,
       STRINGS
     ];
@@ -3847,7 +3854,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       // `return some()`, `else if()`, `(x*sum(1, 2))`
       variants: [
         {
-          begin: /=/,
+          begin: /(?==)/,
           end: /;/
         },
         {
@@ -3861,7 +3868,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       ],
       keywords: CPP_KEYWORDS,
       contains: EXPRESSION_CONTAINS.concat([
-        SYMBOL,
+        OPERATOR,
         {
           begin: /\(/,
           end: /\)/,
@@ -3921,7 +3928,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
           keywords: CPP_KEYWORDS,
           relevance: 0,
           contains: [
-            SYMBOL,
+            OPERATOR,
             C_LINE_COMMENT_MODE,
             hljs.C_BLOCK_COMMENT_MODE,
             STRINGS,

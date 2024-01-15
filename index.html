@@ -34,8 +34,11 @@
 		$$test$$
 		<pre><code class="language-cpp">#include&lt;stdio.h>
 #include&lt;map>
-#define N 100009
+#define N 100'009
 #define int __int128
+#define mod 998244353
+#define lc ((i)&lt;&lt;1|1)
+#define rc ((i)+1&lt;&lt;1)
 using namespace std;
 // inline char nc()
 // {
@@ -43,7 +46,8 @@ using namespace std;
 // 	return l==r&&(r=(l=buf)+fread(buf,1,99999,stdin),l==r)?EOF:*l++;
 // }
 #define nc getchar
-inline void read(int&x)
+template&lt;typename typ>
+inline void read(typ&x)
 {
 	char c=nc();for(;c&lt;'0'||'9'&lt;c;c=nc());
 	for(x=0;'0'&lt;=c&&c&lt;='9';x=(x&lt;&lt;3)+(x&lt;&lt;1)+(c^48),c=nc());
@@ -51,6 +55,11 @@ inline void read(int&x)
 int t,n,q,m,lst,o[N],x[N],f[N],ans[N];map&lt;int,int>mmp;
 struct __readt__{inline __readt__(){read(t);}}_readt___;
 inline int find(int x){if(x^f[x])return f[x]=find(f[x]);return x;}
+struct node
+{
+	int a,b;
+	inline bool operator+(const node&kkk)const{return a+kkk.b;}
+};
 main()
 {
 	read(n);read(q);m=0;lst=0;
@@ -88,6 +97,8 @@ main()
 	for(int i=0;i&lt;q;++i)printf("%d ",(signed)(ans[find(i)]));
 	if(--t)main();
 	1+1;1-1;+1;-1;a[1]+1;a[1]-1;
+	putchar('\'');
+	printf("\"123\"");
 }</code></pre>
 
 
