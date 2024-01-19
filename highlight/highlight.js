@@ -3474,13 +3474,18 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       '\\<\\<','\\>\\>',
       '\\&\\&','\\|\\|',
       '\\<=\\>','==','\\!=','\\<=','\\>=',
-      '\\~','\\!','\\%','\\^','\\&','\\*','\\<','\\>','\\/','\\-','\\+',
-      '\\?','\\:','=','\\|',
+      '\\~','\\!','\\%','\\^','\\&','\\*','\\<','(?<!-)>','\\/','\\-(?!>)','\\+',
+      '\\?','(?<!:):(?!:)','=','\\|',
     );
 
     const OPERATOR = {
       scope: 'operator',
       match: OPERATOR_RE
+    };
+
+    const PUNCTUATION = {
+      scope: 'punctuation',
+      match: regex.either(',','\\.',';','->','::'),
     };
 
     const TITLE_MODE = {
@@ -3491,7 +3496,7 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
 
     const FUNCTION_TITLE = regex.either(
       regex.optional(NAMESPACE_RE) + hljs.IDENT_RE + '\\s*\\(',
-      'operator\\s*'+ OPERATOR_RE
+      'operator\\s*' + OPERATOR_RE + '\\s*\\(',
     );
 
     // https://en.cppreference.com/w/cpp/keyword
@@ -3812,16 +3817,16 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
             },
           ]
         },
-        OPERATOR,
+        // PUNCTUATION,
         NUMBERS,
         hljs.inherit(STRINGS, { className: 'string' }),
         C_LINE_COMMENT_MODE,
-        hljs.C_BLOCK_COMMENT_MODE
+        hljs.C_BLOCK_COMMENT_MODE,
+        OPERATOR,
       ]
     };
 
     const FUNCTION_DISPATCH = {
-      className: 'function.dispatch',
       relevance: 0,
       keywords: {
         // Only for relevance, not highlighting.
@@ -3834,7 +3839,26 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         /(?!switch)/,
         /(?!while)/,
         hljs.IDENT_RE,
-        regex.lookahead(/(<[^<>]+>|)\s*\(/))
+        regex.lookahead(/(<[^<>]+>|)\s*\(/)),
+      returnBegin: 1,
+      contains:[
+        {
+          className: 'function.dispatch',
+          begin: regex.concat(
+            /\b/,
+            /(?!decltype)/,
+            /(?!if)/,
+            /(?!for)/,
+            /(?!switch)/,
+            /(?!while)/,
+            hljs.IDENT_RE,
+            regex.lookahead(/(<[^<>]+>|)\s*\(/))
+        },
+        {
+          begin:/<[^<>]+>/,
+          keywords:CPP_KEYWORDS
+        }
+      ]
     };
 
     const EXPRESSION_CONTAINS = [
@@ -3845,7 +3869,8 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       hljs.C_BLOCK_COMMENT_MODE,
       OPERATOR,
       NUMBERS,
-      STRINGS
+      STRINGS,
+      // PUNCTUATION
     ];
 
     const EXPRESSION_CONTEXT = {
@@ -3854,7 +3879,8 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       // `return some()`, `else if()`, `(x*sum(1, 2))`
       variants: [
         {
-          begin: /(?==)/,
+          returnBegin: true,
+          begin: /=/,
           end: /;/
         },
         {
@@ -3868,7 +3894,6 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
       ],
       keywords: CPP_KEYWORDS,
       contains: EXPRESSION_CONTAINS.concat([
-        OPERATOR,
         {
           begin: /\(/,
           end: /\)/,
@@ -3892,6 +3917,10 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
         { // to prevent it from being confused as the function title
           begin: DECLTYPE_AUTO_RE,
           keywords: CPP_KEYWORDS,
+          relevance: 0
+        },
+        { // to prevent it from being confused as the function title
+          begin: NAMESPACE_RE,
           relevance: 0
         },
         {
@@ -3928,9 +3957,10 @@ if (typeof exports === 'object' && typeof module !== 'undefined') { module.expor
           keywords: CPP_KEYWORDS,
           relevance: 0,
           contains: [
-            OPERATOR,
             C_LINE_COMMENT_MODE,
             hljs.C_BLOCK_COMMENT_MODE,
+            OPERATOR,
+            // PUNCTUATION,
             STRINGS,
             NUMBERS,
             CPP_PRIMITIVE_TYPES,

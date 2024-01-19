@@ -93,6 +93,9 @@ hue-6-2: #e6c07b
 .hljs-title {
   color: #6099CC
 }
+.hljs-punctuation {
+  color: #99ACB9
+}
 .hljs-emphasis {
   font-style: italic
 }

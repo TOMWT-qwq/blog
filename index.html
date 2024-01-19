@@ -34,11 +34,14 @@
 		$$test$$
 		<pre><code class="language-cpp">#include&lt;stdio.h>
 #include&lt;map>
+#include&lt;memory>
 #define N 100'009
 #define int __int128
 #define mod 998244353
 #define lc ((i)&lt;&lt;1|1)
 #define rc ((i)+1&lt;&lt;1)
+#define SLF if(q.size()&&ans[q.front()]>ans[q.back()])\
+	swap(q.front(),q.back());
 using namespace std;
 // inline char nc()
 // {
@@ -60,8 +63,11 @@ struct node
 	int a,b;
 	inline bool operator+(const node&kkk)const{return a+kkk.b;}
 };
+consteval void std::foo(int a=1,int b=2,int c=3){;;;}
 main()
 {
+	auto a = std::make_unique&lt;A>();
+	std::unique_ptr&lt;int>a=std::make_unique&lt;int>();
 	read(n);read(q);m=0;lst=0;
 	for(int i=0;i&lt;n;++i)
 	{
