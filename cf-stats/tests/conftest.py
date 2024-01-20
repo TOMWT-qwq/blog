@@ -1,3 +1,3 @@
 pytest_plugins = [
-    "tests.fixtures.response_fixtures",
+    "cf-stats.tests.fixtures.response_fixtures",
 ]
