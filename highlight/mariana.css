@@ -25,6 +25,9 @@ hue-6:   #d19a66
 hue-6-2: #e6c07b
 
 */
+.hljs-ln-n::before {
+  color: #99ACB9
+}
 .hljs-meta,
 .hljs {
   color: #D8DEE9;
